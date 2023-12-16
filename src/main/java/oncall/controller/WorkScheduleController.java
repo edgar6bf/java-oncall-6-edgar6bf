@@ -1,9 +1,9 @@
 package oncall.controller;
 
-import oncall.domain.Schedule;
 import oncall.domain.ScheduleDate;
 import oncall.domain.ScheduleGenerator;
 import oncall.domain.Workers;
+import oncall.dto.ScheduleDto;
 import oncall.view.input.InputView;
 import oncall.view.output.OutputView;
 
@@ -24,7 +24,12 @@ public class WorkScheduleController {
     public void run() {
         ScheduleDate scheduleDate = inputScheduleDate();
         Workers workers = inputWorkers();
-        List<Schedule> schedules = scheduleGenerator.generateSchedule(scheduleDate, workers);
+        List<ScheduleDto> schedules = scheduleGenerator.generateSchedule(scheduleDate, workers)
+                .stream()
+                .map(ScheduleDto::from)
+                .toList();
+
+        outputView.printSchedules(schedules);
     }
 
     private ScheduleDate inputScheduleDate() {
