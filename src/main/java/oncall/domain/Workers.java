@@ -11,8 +11,7 @@ public class Workers {
     private final List<Worker> weekendWorkers;
 
     public Workers(List<String> weekdayWorkers, List<String> weekendWorkers) {
-        validateWorkersCountEqual(weekdayWorkers, weekendWorkers);
-        validateWorkersDuplicated(weekdayWorkers);
+        validateWorkersDuplicated(weekdayWorkers, weekendWorkers);
         validateWorkersCount(weekdayWorkers, weekendWorkers);
 
         List<Worker> workers = generateWorker(weekdayWorkers);
@@ -20,19 +19,13 @@ public class Workers {
         this.weekendWorkers = initWorker(weekendWorkers, workers);
     }
 
-    private void validateWorkersCountEqual(List<String> weekdayWorkers, List<String> weekendWorkers) {
-        boolean isNoneMatch = weekdayWorkers.stream().anyMatch(worker -> !weekendWorkers.contains(worker));
+    private void validateWorkersDuplicated(List<String> weekdayWorkers, List<String> weekendWorkers) {
+        int weekdayValidSize = weekdayWorkers.size();
+        int weekendValidSize = weekendWorkers.size();
+        Set<String> weekdaySet = new HashSet<>(weekdayWorkers);
+        Set<String> weekendSet = new HashSet<>(weekendWorkers);
 
-        if (isNoneMatch) {
-            throw new IllegalArgumentException("모든 근무자는 평일, 휴일 각 1회씩 비상 근무에 참가해야합니다. 다시 입력하세요.");
-        }
-    }
-
-    private void validateWorkersDuplicated(List<String> weekdayWorkers) {
-        int workerSize = weekdayWorkers.size();
-        Set<String> testSet = new HashSet<>(weekdayWorkers);
-
-        if (testSet.size() != workerSize) {
+        if (weekdaySet.size() != weekdayValidSize || weekendSet.size() != weekendValidSize) {
             throw new IllegalArgumentException("비상 근무자를 중복 입력할 수 없습니다. 다시 입력하세요.");
         }
     }
