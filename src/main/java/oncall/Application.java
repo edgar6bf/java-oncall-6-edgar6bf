@@ -1,7 +1,11 @@
 package oncall;
 
+import oncall.config.AppConfig;
+import oncall.controller.WorkScheduleController;
+
 public class Application {
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        WorkScheduleController workScheduleController = AppConfig.config();
+        workScheduleController.run();
     }
 }
