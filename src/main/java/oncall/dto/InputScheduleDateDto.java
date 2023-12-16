@@ -7,6 +7,9 @@ import oncall.domain.ScheduleDate;
 public record InputScheduleDateDto(int month, String dayOfWeek) {
 
     public ScheduleDate toScheduleDate() {
-        return new ScheduleDate(Month.convertToMonth(month), DayOfWeek.convertToDayOfWeek(dayOfWeek));
+        return new ScheduleDate(
+                Month.convertToMonth(month),
+                DayOfWeek.convertValueToDayOfWeek(dayOfWeek)
+        );
     }
 }

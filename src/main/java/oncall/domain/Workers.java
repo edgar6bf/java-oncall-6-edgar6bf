@@ -14,8 +14,10 @@ public class Workers {
         validateWorkersCountEqual(weekdayWorkers, weekendWorkers);
         validateWorkersDuplicated(weekdayWorkers);
         validateWorkersCount(weekdayWorkers, weekendWorkers);
-        this.weekdayWorkers = convertToWorkerObject(weekdayWorkers);
-        this.weekendWorkers = convertToWorkerObject(weekendWorkers);
+
+        List<Worker> workers = generateWorker(weekdayWorkers);
+        this.weekdayWorkers = initWorker(weekdayWorkers, workers);
+        this.weekendWorkers = initWorker(weekendWorkers, workers);
     }
 
     private void validateWorkersCountEqual(List<String> weekdayWorkers, List<String> weekendWorkers) {
@@ -39,12 +41,56 @@ public class Workers {
         }
     }
 
-    private List<Worker> convertToWorkerObject(List<String> workers) {
+    private List<Worker> generateWorker(List<String> workers) {
+        return workers.stream()
+                .map(Worker::new)
+                .toList();
+    }
+
+    private List<Worker> initWorker(List<String> workers, List<Worker> workerObjects) {
         List<Worker> convertWorkers = new ArrayList<>();
         for (int i = 0; i < workers.size(); i++) {
-            convertWorkers.add(new Worker(workers.get(i)));
+            int index = i;
+            Worker findWorker = workerObjects.stream()
+                    .filter(obj -> obj.getName().equals(workers.get(index)))
+                    .findAny()
+                    .orElseThrow(() -> new IllegalArgumentException("해당 이름의 Worker 객체가 없습니다."));
+
+            convertWorkers.add(findWorker);
         }
 
         return convertWorkers;
+    }
+
+    public Worker findWorkers(int sequence, int day, boolean isWeekend) {
+        int targetSequence = sequence % weekdayWorkers.size();
+
+        if (isWeekend) {
+            return findWorkers(targetSequence, day, weekendWorkers);
+        }
+
+        return findWorkers(targetSequence, day, weekdayWorkers);
+    }
+
+    private Worker findWorkers(int sequence, int day, List<Worker> workers) {
+        while (true) {
+            Worker worker = workers.get(sequence);
+            if (!worker.isWorkYesterday(day)) {
+                break;
+            }
+            changeWorkerSequence(sequence, workers, worker);
+        }
+
+        Worker worker = workers.get(sequence);
+        worker.updateLastWorkDay(day);
+
+        return worker;
+    }
+
+    private void changeWorkerSequence(int sequence, List<Worker> workers, Worker targetWorker) {
+        int nextSequence = (sequence + 1) % workers.size();
+        Worker temp = workers.get(nextSequence);
+        workers.set(nextSequence, targetWorker);
+        workers.set(sequence, temp);
     }
 }
