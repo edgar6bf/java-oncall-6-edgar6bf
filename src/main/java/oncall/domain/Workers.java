@@ -21,7 +21,9 @@ public class Workers {
     }
 
     private void validateWorkersCountEqual(List<String> weekdayWorkers, List<String> weekendWorkers) {
-        if (Collections.disjoint(weekdayWorkers, weekendWorkers)) {
+        boolean isNoneMatch = weekdayWorkers.stream().anyMatch(worker -> !weekendWorkers.contains(worker));
+
+        if (isNoneMatch) {
             throw new IllegalArgumentException("모든 근무자는 평일, 휴일 각 1회씩 비상 근무에 참가해야합니다. 다시 입력하세요.");
         }
     }
