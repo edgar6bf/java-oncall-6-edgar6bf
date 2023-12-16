@@ -30,7 +30,7 @@ public enum DayOfWeek {
         return Arrays.stream(DayOfWeek.values())
                 .filter(dayOfWeek -> dayOfWeek.getSequence() == sequence)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 요일입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 요일 시퀀스입니다."));
     }
 
     public String getDisplayName() {
