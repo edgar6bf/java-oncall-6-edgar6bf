@@ -19,8 +19,7 @@ public class WorkScheduleController {
 
     public void run() {
         ScheduleDate scheduleDate = inputScheduleDate();
-
-
+        Workers workers = inputWorkers();
     }
 
     private ScheduleDate inputScheduleDate() {
@@ -30,6 +29,19 @@ public class WorkScheduleController {
             outputView.printErrorMessage(e.getMessage());
 
             return inputScheduleDate();
+        }
+    }
+
+    private Workers inputWorkers() {
+        try {
+            List<String> weekdayWorkers = inputView.inputWeekdayWorkers();
+            List<String> weekendWorkers = inputView.inputWeekendWorkers();
+
+            return new Workers(weekdayWorkers, weekendWorkers);
+        } catch (IllegalArgumentException e) {
+            outputView.printErrorMessage(e.getMessage());
+
+            return inputWorkers();
         }
     }
 }
