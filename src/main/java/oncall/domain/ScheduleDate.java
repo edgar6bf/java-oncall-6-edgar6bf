@@ -20,5 +20,4 @@ public class ScheduleDate {
     public DayOfWeek getStartDay() {
         return startDay;
     }
-
 }
